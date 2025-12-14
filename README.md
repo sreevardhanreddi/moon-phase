@@ -80,15 +80,15 @@ const phase = moonAge / synodicMonth;
 The **illumination percentage** indicates how much of the Moon's visible surface is lit by the Sun. It's calculated using a cosine function:
 
 ```javascript
-const illumination = (1 - Math.cos(phase � 2 � �)) / 2;
+const illumination = (1 - Math.cos(phase * 2 * Math.PI)) / 2;
 ```
 
 This produces a smooth curve:
 
 - New Moon (phase = 0): `(1 - cos(0)) / 2 = 0%`
-- First Quarter (phase = 0.25): `(1 - cos(�/2)) / 2 = 50%`
-- Full Moon (phase = 0.5): `(1 - cos(�)) / 2 = 100%`
-- Last Quarter (phase = 0.75): `(1 - cos(3�/2)) / 2 = 50%`
+- First Quarter (phase = 0.25): `(1 - cos(π/2)) / 2 = 50%`
+- Full Moon (phase = 0.5): `(1 - cos(π)) / 2 = 100%`
+- Last Quarter (phase = 0.75): `(1 - cos(3π/2)) / 2 = 50%`
 
 ### Next New Moon and Full Moon
 
@@ -99,9 +99,9 @@ function getNextPhase(currentPhase, targetPhase, fromDate) {
   let daysUntil;
 
   if (targetPhase > currentPhase) {
-    daysUntil = (targetPhase - currentPhase) � synodicMonth;
+    daysUntil = (targetPhase - currentPhase) * synodicMonth;
   } else {
-    daysUntil = (1 - currentPhase + targetPhase) � synodicMonth;
+    daysUntil = (1 - currentPhase + targetPhase) * synodicMonth;
   }
 
   return fromDate + daysUntil;
