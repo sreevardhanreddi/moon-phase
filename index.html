@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f8fafc" media="(prefers-color-scheme: light)">
+  <title>Moon Phase</title>
+  <!-- <link rel="manifest" href="manifest.json"> -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          animation: {
+            'pulse-slow': 'pulse 2s ease-in-out infinite',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @keyframes pulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.02);
+      }
+    }
+  </style>
+</head>
+
+<body
+  class="min-h-screen flex flex-col items-center justify-center p-5 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-stone-950 dark:to-stone-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+  <!-- Theme Toggle Button -->
+  <button id="themeToggle"
+    class="fixed top-6 right-6 p-3 rounded-full bg-white/80 dark:bg-stone-800/80 backdrop-blur-md shadow-lg border border-gray-200 dark:border-stone-700 hover:scale-110 transition-transform duration-200 z-50">
+    <svg id="sunIcon" class="w-6 h-6 text-gray-700 dark:text-stone-300 hidden dark:block" fill="none"
+      stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z">
+      </path>
+    </svg>
+    <svg id="moonIcon" class="w-6 h-6 text-gray-700 dark:text-stone-300 block dark:hidden" fill="none"
+      stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+    </svg>
+  </button>
+
+  <div
+    class="max-w-lg w-full bg-white/80 dark:bg-stone-800/80 backdrop-blur-lg rounded-3xl p-8 md:p-10 shadow-2xl shadow-gray-400/50 dark:shadow-[0_20px_40px_-12px_rgba(255,255,255,0.08)] border border-gray-200 dark:border-stone-700">
+    <!-- Date Picker -->
+    <div class="flex items-center justify-between gap-3 mb-6 bg-gray-100/50 dark:bg-stone-900/50 rounded-xl p-3">
+      <button id="prevDay"
+        class="p-2 hover:bg-gray-200 dark:hover:bg-stone-700 rounded-lg transition-colors flex-shrink-0">
+        <svg class="w-5 h-5 text-gray-700 dark:text-stone-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+
+      <input type="date" id="dateInput"
+        class="flex-1 px-3 py-2 bg-white dark:bg-stone-800 border border-gray-300 dark:border-stone-600 rounded-lg text-sm font-medium text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 max-w-xs">
+
+      <button id="nextDay"
+        class="p-2 hover:bg-gray-200 dark:hover:bg-stone-700 rounded-lg transition-colors flex-shrink-0">
+        <svg class="w-5 h-5 text-gray-700 dark:text-stone-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+
+      <button id="todayBtn"
+        class="px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-colors flex-shrink-0">
+        Today
+      </button>
+    </div>
+
+    <div class="text-center mb-8">
+      <div class="w-48 h-48 md:w-52 md:h-52 mx-auto mb-5 relative">
+        <svg id="moonSVG" viewBox="0 0 200 200" class="w-full h-full drop-shadow-2xl">
+          <!-- Moon base circle -->
+          <defs>
+            <!-- Clipping path to keep shadow within moon -->
+            <clipPath id="moonClip">
+              <circle cx="100" cy="100" r="90" />
+            </clipPath>
+
+            <!-- Crater pattern -->
+            <pattern id="craters" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
+              <circle cx="60" cy="80" r="6" fill="rgba(0,0,0,0.15)" />
+              <circle cx="140" cy="60" r="10" fill="rgba(0,0,0,0.1)" />
+              <circle cx="40" cy="140" r="8" fill="rgba(0,0,0,0.12)" />
+              <circle cx="160" cy="120" r="12" fill="rgba(0,0,0,0.08)" />
+              <circle cx="100" cy="160" r="7" fill="rgba(0,0,0,0.1)" />
+              <circle cx="120" cy="40" r="4" fill="rgba(0,0,0,0.07)" />
+              <circle cx="30" cy="100" r="5" fill="rgba(0,0,0,0.09)" />
+              <circle cx="170" cy="170" r="6" fill="rgba(0,0,0,0.11)" />
+              <circle cx="90" cy="110" r="3" fill="rgba(0,0,0,0.06)" />
+              <circle cx="70" cy="30" r="4" fill="rgba(0,0,0,0.08)" />
+            </pattern>
+
+            <!-- Radial gradient for 3D effect -->
+            <radialGradient id="moonGradient">
+              <stop offset="0%" stop-color="#f5f5f5" />
+              <stop offset="70%" stop-color="#e0e0e0" />
+              <stop offset="100%" stop-color="#d0d0d0" />
+            </radialGradient>
+
+            <!-- Shadow gradient -->
+            <linearGradient id="shadowGradient">
+              <stop offset="0%" stop-color="#050505" />
+              <stop offset="100%" stop-color="#000000" />
+            </linearGradient>
+          </defs>
+
+          <!-- Group with clipping -->
+          <g clip-path="url(#moonClip)">
+            <!-- Moon background -->
+            <circle cx="100" cy="100" r="90" fill="url(#moonGradient)" />
+
+            <!-- Craters -->
+            <circle cx="100" cy="100" r="90" fill="url(#craters)" />
+
+            <!-- Shadow (will be manipulated by JS) -->
+            <g id="moonPhaseGroup">
+              <!-- This will be dynamically updated -->
+            </g>
+          </g>
+        </svg>
+      </div>
+      <div class="text-3xl font-semibold mb-2 text-gray-900 dark:text-white" id="phaseName">Purnima</div>
+      <div class="text-lg text-gray-600 dark:text-stone-400 mb-5" id="illumination">
+        <span id="illumPercent">100% Illuminated</span>
+        <span class="text-sm text-gray-400 dark:text-stone-500 ml-2" id="westernPhase">(Full Moon)</span>
+      </div>
+    </div>
+
+    <div id="detailsSection" class="bg-gray-100/50 dark:bg-stone-900/50 rounded-2xl p-5 mt-5 space-y-3">
+      <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700"
+        id="lunarDayRow">
+        <span class="text-sm text-gray-600 dark:text-stone-400">Lunar Day</span>
+        <span id="lunarDay"></span>
+      </div>
+      <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700">
+        <span class="text-sm text-gray-600 dark:text-stone-400">
+          <div>Next New Moon</div>
+          <div class="text-xs mt-0.5 text-gray-500 dark:text-stone-500">Amavasya</div>
+        </span>
+        <span id="nextNew"></span>
+      </div>
+      <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700">
+        <span class="text-sm text-gray-600 dark:text-stone-400">
+          <div>Next Full Moon</div>
+          <div class="text-xs mt-0.5 text-gray-500 dark:text-stone-500">Purnima (Pournami)</div>
+        </span>
+        <span id="nextFull"></span>
+      </div>
+      <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700">
+        <span class="text-sm text-gray-600 dark:text-stone-400">
+          <div>Previous Ekadashi</div>
+          <div class="text-xs mt-0.5 text-gray-500 dark:text-stone-500">11<sup>th</sup> Lunar Day</div>
+        </span>
+        <span id="prevEkadashi"></span>
+      </div>
+      <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700">
+        <span class="text-sm text-gray-600 dark:text-stone-400">Age</span>
+        <span class="text-sm font-medium text-gray-900 dark:text-white" id="moonAge">14.77 days</span>
+      </div>
+      <div class="flex justify-between items-center py-3">
+        <span class="text-sm text-gray-600 dark:text-stone-400">Distance</span>
+        <span class="text-sm font-medium text-gray-900 dark:text-white" id="distance">~384,400 km</span>
+      </div>
+    </div>
+
+    <div class="text-center mt-3 text-xs text-gray-400 dark:text-stone-600" id="updateTime">Updated just now</div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="py-6 text-center text-sm text-gray-600 dark:text-stone-400">
+    <div class="flex justify-center items-center gap-4">
+      <a href="https://sreevardhanreddi.github.io" target="_blank" rel="noopener noreferrer"
+        class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors inline-flex items-center gap-1">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.6 9h16.8M3.6 15h16.8" />
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M12 3a15.3 15.3 0 0 1 4 9 15.3 15.3 0 0 1-4 9 15.3 15.3 0 0 1-4-9 15.3 15.3 0 0 1 4-9z" />
+        </svg>
+        <!-- Portfolio -->
+      </a>
+      <span class="text-gray-400 dark:text-stone-600">•</span>
+      <a href="https://github.com/sreevardhanreddi/moon-phase" target="_blank" rel="noopener noreferrer"
+        class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors inline-flex items-center gap-1">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path fill-rule="evenodd"
+            d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+            clip-rule="evenodd" />
+        </svg>
+        <!-- GitHub -->
+      </a>
+    </div>
+    <div class="my-3 font-mono text-gray-500 dark:text-stone-500" id="live-clock"></div>
+  </footer>
+
+  <script>
+    // Theme management
+    let currentTheme = localStorage.getItem('theme') || 'system';
+
+    function applyTheme(theme) {
+      if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    }
+
+    function setTheme(theme) {
+      currentTheme = theme;
+      localStorage.setItem('theme', theme);
+      applyTheme(theme);
+    }
+
+    // Apply theme on load
+    applyTheme(currentTheme);
+
+    // Listen for system theme changes (only if theme is set to 'system')
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+      if (currentTheme === 'system') {
+        applyTheme('system');
+      }
+    });
+
+    // Theme toggle button handler
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggleBtn = document.getElementById('themeToggle');
+
+      toggleBtn.addEventListener('click', () => {
+        const isDark = document.documentElement.classList.contains('dark');
+        setTheme(isDark ? 'light' : 'dark');
+      });
+    });
+
+    // Selected date state (default to today)
+    let selectedDate = new Date();
+
+    // Format date for input (YYYY-MM-DD)
+    function formatDateForInput(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    // Initialize date picker
+    function initializeDatePicker() {
+      const dateInput = document.getElementById('dateInput');
+
+      // Set initial value
+      dateInput.value = formatDateForInput(selectedDate);
+
+      // Date input change
+      dateInput.addEventListener('change', (e) => {
+        selectedDate = new Date(e.target.value + 'T00:00:00');
+        updateMoonDisplay();
+      });
+
+      // Previous day button
+      document.getElementById('prevDay').addEventListener('click', () => {
+        selectedDate.setDate(selectedDate.getDate() - 1);
+        dateInput.value = formatDateForInput(selectedDate);
+        updateMoonDisplay();
+      });
+
+      // Next day button
+      document.getElementById('nextDay').addEventListener('click', () => {
+        selectedDate.setDate(selectedDate.getDate() + 1);
+        dateInput.value = formatDateForInput(selectedDate);
+        updateMoonDisplay();
+      });
+
+      // Today button
+      document.getElementById('todayBtn').addEventListener('click', () => {
+        selectedDate = new Date();
+        dateInput.value = formatDateForInput(selectedDate);
+        updateMoonDisplay();
+      });
+    }
+
+    // Moon phase calculation
+    function getMoonPhase(date = new Date()) {
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+      const day = date.getDate();
+
+      // Calculate Julian date
+      let jd = 367 * year - Math.floor(7 * (year + Math.floor((month + 9) / 12)) / 4) +
+        Math.floor(275 * month / 9) + day + 1721013.5;
+
+      // Days since known new moon (Jan 6, 2000)
+      const daysSinceNew = jd - 2451549.5;
+
+      // Synodic month (lunar cycle) is 29.53 days
+      const synodicMonth = 29.53058867;
+      const moonAge = daysSinceNew % synodicMonth;
+
+      // Phase as a fraction (0 = new moon, 0.5 = full moon)
+      const phase = moonAge / synodicMonth;
+
+      // Illumination percentage
+      const illumination = (1 - Math.cos(phase * 2 * Math.PI)) / 2;
+
+      return {
+        age: moonAge,
+        phase: phase,
+        illumination: illumination
+      };
+    }
+
+    function getPhaseName(phase) {
+      if (phase < 0.033 || phase > 0.967) return "New Moon";
+      if (phase < 0.216) return "Waxing Crescent";
+      if (phase < 0.283) return "First Quarter";
+      if (phase < 0.466) return "Waxing Gibbous";
+      if (phase < 0.533) return "Full Moon";
+      if (phase < 0.716) return "Waning Gibbous";
+      if (phase < 0.783) return "Last Quarter";
+      return "Waning Crescent";
+    }
+
+    function getTithiName(lunarDay) {
+      // Hindu lunar day names (Tithi)
+      const tithiNames = {
+        1: "Prathama (Padyami)",
+        2: "Dwitiya (Vidiya)",
+        3: "Tritiya (Tadiya)",
+        4: "Chaturthi (Chavithi)",
+        5: "Panchami (Panchami)",
+        6: "Shashthi (Shashthi)",
+        7: "Saptami (Sapthami)",
+        8: "Ashtami (Ashtami)",
+        9: "Navami (Navami)",
+        10: "Dashami (Dasami)",
+        11: "Ekadashi (Ekadasi)",
+        12: "Dwadashi (Dvadasi)",
+        13: "Trayodashi (Tryodasi)",
+        14: "Chaturdashi (Chaturdasi)",
+        15: "Purnima / Amavasya",
+        16: "Prathama (Padyami)",
+        17: "Dwitiya (Vidiya)",
+        18: "Tritiya (Tadiya)",
+        19: "Chaturthi (Chavithi)",
+        20: "Panchami (Panchami)",
+        21: "Shashthi (Shashthi)",
+        22: "Saptami (Sapthami)",
+        23: "Ashtami (Ashtami)",
+        24: "Navami (Navami)",
+        25: "Dashami (Dasami)",
+        26: "Ekadashi (Ekadasi)",
+        27: "Dwadashi (Dvadasi)",
+        28: "Trayodashi (Tryodasi)",
+        29: "Chaturdashi (Chaturdasi)",
+        30: "Amavasya"
+      };
+
+      // Determine if waxing (Shukla Paksha) or waning (Krishna Paksha)
+      const paksha = lunarDay <= 15 ? "Shukla Paksha" : "Krishna Paksha";
+
+      // Special handling for day 15 - check if it's full moon or new moon
+      if (lunarDay === 15) {
+        // If around full moon phase (0.4-0.6), it's Purnima
+        const moonData = getMoonPhase(new Date());
+        const isPurnima = moonData.phase > 0.4 && moonData.phase < 0.6;
+        return {
+          name: isPurnima ? "Purnima (Pournami)" : tithiNames[lunarDay],
+          paksha: paksha
+        };
+      }
+
+      return {
+        name: tithiNames[lunarDay] || `Day ${lunarDay}`,
+        paksha: paksha
+      };
+    }
+
+    function getNextPhase(currentPhase, targetPhase, fromDate) {
+      const synodicMonth = 29.53058867;
+      let daysUntil;
+
+      if (targetPhase > currentPhase) {
+        daysUntil = (targetPhase - currentPhase) * synodicMonth;
+      } else {
+        daysUntil = (1 - currentPhase + targetPhase) * synodicMonth;
+      }
+
+      const nextDate = new Date(fromDate);
+      nextDate.setDate(nextDate.getDate() + daysUntil);
+      return nextDate;
+    }
+
+    function renderMoonPhase(moonPhaseGroup, phase, illumination, lunarDay) {
+      if (phase < 0.02 || phase > 0.98) {
+        // New moon - completely dark
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        path.setAttribute('cx', '100');
+        path.setAttribute('cy', '100');
+        path.setAttribute('r', '90');
+        path.setAttribute('fill', '#000000');
+        path.setAttribute('opacity', '0.95');
+        moonPhaseGroup.appendChild(path);
+        return;
+      }
+
+      if (phase > 0.48 && phase < 0.52) {
+        // Full moon - no shadow
+        return;
+      }
+
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+
+      // The terminator ellipse width is based on illumination
+      // illumination = (1 - cos(phase * 2 * PI)) / 2
+      // At phase 0: illum = 0 (new moon)
+      // At phase 0.25: illum = 0.5 (first quarter)
+      // At phase 0.5: illum = 1 (full moon)
+      // At phase 0.75: illum = 0.5 (last quarter)
+      const illum = illumination;
+
+      // ellipseWidth controls the terminator curve: 0 = straight line, 90 = full semicircle
+      const ellipseWidth = 90 * Math.abs(1 - 2 * illum);
+
+      // Determine if waxing or waning based on lunar day (more reliable than phase)
+      // Days 1-15: Shukla Paksha (Waxing) - light on RIGHT
+      // Days 16-30: Krishna Paksha (Waning) - light on LEFT
+      const isWaxing = lunarDay <= 15;
+
+      if (isWaxing) {
+        // WAXING (Shukla Paksha): Light on RIGHT side, shadow on LEFT
+        // After new moon, light appears as a sliver on RIGHT and grows leftward
+
+        if (illum < 0.5) {
+          // Waxing Crescent: Less than half lit (light is a sliver on RIGHT)
+          // Shadow covers: left semicircle + extends RIGHT past center
+          const d = `M 100,10 A 90,90 0 0,0 100,190 A ${ellipseWidth},90 0 0,1 100,10 Z`;
+          path.setAttribute('d', d);
+        } else {
+          // Waxing Gibbous: More than half lit
+          // Shadow only on LEFT side, concave edge curving left
+          const d = `M 100,10 A 90,90 0 0,0 100,190 A ${ellipseWidth},90 0 0,0 100,10 Z`;
+          path.setAttribute('d', d);
+        }
+      } else {
+        // WANING (Krishna Paksha): Light on LEFT side, shadow on RIGHT
+        // After full moon, shadow appears on RIGHT and grows leftward
+
+        if (illum > 0.5) {
+          // Waning Gibbous: More than half lit
+          // Shadow only on RIGHT side, concave edge curving right
+          const d = `M 100,10 A ${ellipseWidth},90 0 0,1 100,190 A 90,90 0 0,1 100,10 Z`;
+          path.setAttribute('d', d);
+        } else {
+          // Waning Crescent: Less than half lit (light is a sliver on LEFT)
+          // Shadow covers: right semicircle + extends LEFT past center
+          const d = `M 100,10 A ${ellipseWidth},90 0 0,0 100,190 A 90,90 0 0,1 100,10 Z`;
+          path.setAttribute('d', d);
+        }
+      }
+
+      path.setAttribute('fill', '#000000');
+      path.setAttribute('opacity', '0.95');
+      moonPhaseGroup.appendChild(path);
+    }
+
+    function updateMoonDisplay() {
+      const now = selectedDate;
+      const moonData = getMoonPhase(now);
+
+      // Calculate lunar day (1-30)
+      const lunarDay = Math.floor(moonData.age) + 1;
+      const isDay11 = lunarDay === 11 || lunarDay === 26; // Both Ekadashis
+      const isDay19 = lunarDay === 19; // Only Krishna Paksha Chaturthi
+      const isDay14 = lunarDay === 14 || lunarDay === 29; // Both Chaturdashis
+
+      // Update lunar day display with highlight
+      const lunarDayRow = document.getElementById('lunarDayRow');
+      if (isDay11) {
+        lunarDayRow.className = 'flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700 bg-red-50 dark:bg-red-900/20 border-l-4 !border-l-red-500 pl-4 -ml-5';
+      } else if (isDay19) {
+        lunarDayRow.className = 'flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700 bg-orange-50 dark:bg-orange-900/20 border-l-4 !border-l-orange-500 pl-4 -ml-5';
+      } else if (isDay14) {
+        lunarDayRow.className = 'flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700 bg-indigo-50 dark:bg-indigo-900/20 border-l-4 !border-l-indigo-500 pl-4 -ml-5';
+      } else {
+        lunarDayRow.className = 'flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700';
+      }
+
+      // Get Tithi information
+      const tithiInfo = getTithiName(lunarDay);
+      document.getElementById('lunarDay').innerHTML = `
+                <div class="text-right">
+                    <div class="text-sm font-medium text-gray-900 dark:text-white">Day ${lunarDay} - ${tithiInfo.name}</div>
+                    <div class="text-xs text-gray-500 dark:text-stone-500 mt-0.5">${tithiInfo.paksha}</div>
+                </div>
+            `;
+
+      // Update phase name - use Tithi name as main, Western phase as secondary
+      const westernPhaseName = getPhaseName(moonData.phase);
+      document.getElementById('phaseName').textContent = tithiInfo.name;
+      document.getElementById('illumPercent').textContent = `${(moonData.illumination * 100).toFixed(1)}% Illuminated`;
+      document.getElementById('westernPhase').textContent = `(${westernPhaseName})`;
+
+      // Update moon age
+      document.getElementById('moonAge').textContent = `${moonData.age.toFixed(2)} days`;
+
+      // Calculate next new and full moons
+      const nextNew = getNextPhase(moonData.phase, 0, selectedDate);
+      const nextFull = getNextPhase(moonData.phase, 0.5, selectedDate);
+
+      // Update SVG moon phase visualization
+      const phase = moonData.phase;
+      const moonPhaseGroup = document.getElementById('moonPhaseGroup');
+
+      // Clear previous phase
+      moonPhaseGroup.innerHTML = '';
+
+      // Moon phases visualization
+      // Phase 0.0 = New Moon (completely dark)
+      // Phase 0.25 = First Quarter (right half lit, left half dark)
+      // Phase 0.5 = Full Moon (completely lit)
+      // Phase 0.75 = Last Quarter (left half lit, right half dark)
+      // Phase 1.0 = New Moon (completely dark)
+      //
+      // The illuminated portion:
+      // - WAXING (0 to 0.5): Light appears on RIGHT, grows leftward
+      // - WANING (0.5 to 1): Light shrinks from RIGHT, shadow grows from right
+
+      // Render the moon phase SVG
+      renderMoonPhase(moonPhaseGroup, phase, moonData.illumination, lunarDay);
+
+      // Calculate previous Ekadashi (day 11)
+      const daysAfterDay11Waxing = lunarDay > 11 ? (lunarDay - 11) : (lunarDay + 30 - 11);
+      const daysAfterDay11Waning = lunarDay > 26 ? (lunarDay - 26) : (lunarDay + 30 - 26);
+
+      const prevEkadashiWaxing = new Date(selectedDate);
+      prevEkadashiWaxing.setDate(prevEkadashiWaxing.getDate() - daysAfterDay11Waxing);
+
+      const prevEkadashiWaning = new Date(selectedDate);
+      prevEkadashiWaning.setDate(prevEkadashiWaning.getDate() - daysAfterDay11Waning);
+
+      // Show the most recent one
+      const prevEkadashi = daysAfterDay11Waxing < daysAfterDay11Waning ? prevEkadashiWaxing : prevEkadashiWaning;
+      const prevEkadashiType = daysAfterDay11Waxing < daysAfterDay11Waning ? "Waxing" : "Waning";
+
+      const dateOptions = { month: 'short', day: 'numeric', year: 'numeric' };
+      const dayOptions = { weekday: 'long' };
+
+      // Update Previous Ekadashi
+      if (!isDay11) {
+        document.getElementById('prevEkadashi').innerHTML = `
+                    <div class="text-right">
+                        <div class="text-sm font-medium text-gray-900 dark:text-white">${prevEkadashi.toLocaleDateString('en-US', dateOptions)} (${prevEkadashiType})</div>
+                        <div class="text-xs text-gray-500 dark:text-stone-500 mt-0.5">${prevEkadashi.toLocaleDateString('en-US', dayOptions)}</div>
+                    </div>
+                `;
+      } else {
+        document.getElementById('prevEkadashi').innerHTML = '<div class="text-sm font-medium text-gray-900 dark:text-white">Today!</div>';
+      }
+
+      document.getElementById('nextNew').innerHTML = `
+                <div class="text-right">
+                    <div class="text-sm font-medium text-gray-900 dark:text-white">${nextNew.toLocaleDateString('en-US', dateOptions)}</div>
+                    <div class="text-xs text-gray-500 dark:text-stone-500 mt-0.5">${nextNew.toLocaleDateString('en-US', dayOptions)}</div>
+                </div>
+            `;
+
+      document.getElementById('nextFull').innerHTML = `
+                <div class="text-right">
+                    <div class="text-sm font-medium text-gray-900 dark:text-white">${nextFull.toLocaleDateString('en-US', dateOptions)}</div>
+                    <div class="text-xs text-gray-500 dark:text-stone-500 mt-0.5">${nextFull.toLocaleDateString('en-US', dayOptions)}</div>
+                </div>
+            `;
+
+      // Update Previous Ekadashi
+      document.getElementById('prevEkadashi').innerHTML = `
+                <div class="text-right">
+                    <div class="text-sm font-medium text-gray-900 dark:text-white">${prevEkadashi.toLocaleDateString('en-US', dateOptions)} (${prevEkadashiType})</div>
+                    <div class="text-xs text-gray-500 dark:text-stone-500 mt-0.5">${prevEkadashi.toLocaleDateString('en-US', dayOptions)}</div>
+                </div>
+            `;
+
+      // Calculate next two Ekadashi dates (day 11)
+      // There are two Ekadashis per lunar month - one in waxing, one in waning
+      const synodicMonth = 29.53058867;
+      const daysUntilDay11Waxing = lunarDay <= 11 ? (11 - lunarDay) : (30 - lunarDay + 11);
+      const daysUntilDay11Waning = lunarDay <= 26 ? (26 - lunarDay) : (30 - lunarDay + 26);
+
+      const nextEkadashiWaxing = new Date(selectedDate);
+      nextEkadashiWaxing.setDate(nextEkadashiWaxing.getDate() + daysUntilDay11Waxing);
+
+      const nextEkadashiWaning = new Date(selectedDate);
+      nextEkadashiWaning.setDate(nextEkadashiWaning.getDate() + daysUntilDay11Waning);
+
+      // Show the sooner one in the details
+      const nextEkadashi = daysUntilDay11Waxing < daysUntilDay11Waning ? nextEkadashiWaxing : nextEkadashiWaning;
+      const ekadashiType = daysUntilDay11Waxing < daysUntilDay11Waning ? "Waxing" : "Waning";
+
+      // Calculate next Chaturthi (day 19 only - Krishna Paksha)
+      const daysUntilDay19 = lunarDay <= 19 ? (19 - lunarDay) : (30 - lunarDay + 19);
+
+      const nextChaturthi = new Date(selectedDate);
+      nextChaturthi.setDate(nextChaturthi.getDate() + daysUntilDay19);
+      const chaturthiType = "Waning";
+
+      // Calculate next Chaturdashi (day 14)
+      const daysUntilDay14Waxing = lunarDay <= 14 ? (14 - lunarDay) : (30 - lunarDay + 14);
+      const daysUntilDay14Waning = lunarDay <= 29 ? (29 - lunarDay) : (30 - lunarDay + 29);
+
+      const nextChaturdasiWaxing = new Date(selectedDate);
+      nextChaturdasiWaxing.setDate(nextChaturdasiWaxing.getDate() + daysUntilDay14Waxing);
+
+      const nextChaturdasiWaning = new Date(selectedDate);
+      nextChaturdasiWaning.setDate(nextChaturdasiWaning.getDate() + daysUntilDay14Waning);
+
+      const nextChaturdasi = daysUntilDay14Waxing < daysUntilDay14Waning ? nextChaturdasiWaxing : nextChaturdasiWaning;
+      const chaturdasiType = daysUntilDay14Waxing < daysUntilDay14Waning ? "Waxing" : "Waning";
+
+      // Sort all three by date (chronologically)
+      const fastDays = [
+        { date: nextChaturthi, type: 'chaturthi', displayType: chaturthiType, isToday: isDay19 },
+        { date: nextEkadashi, type: 'ekadashi', displayType: ekadashiType, isToday: isDay11 },
+        { date: nextChaturdasi, type: 'chaturdashi', displayType: chaturdasiType, isToday: isDay14 }
+      ].sort((a, b) => a.date - b.date);
+
+      // Create/update rows in chronological order
+      const detailsDiv = document.getElementById('detailsSection');
+      let insertPosition = 1; // After Lunar Day
+
+      fastDays.forEach((fastDay, index) => {
+        if (fastDay.type === 'chaturthi') {
+          let chaturthiRow = document.getElementById('chaturthiRow');
+          if (!chaturthiRow) {
+            chaturthiRow = document.createElement('div');
+            chaturthiRow.id = 'chaturthiRow';
+            chaturthiRow.className = 'flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700';
+            chaturthiRow.innerHTML = `
+                            <span class="text-sm text-gray-600 dark:text-stone-400">
+                                <div>Next Chaturthi</div>
+                                <div class="text-xs mt-0.5 text-gray-500 dark:text-stone-500">04<sup>th</sup> Lunar Day (Krishna Paksha)</div>
+                            </span>
+                            <span id="nextChaturthi"></span>
+                        `;
+            detailsDiv.insertBefore(chaturthiRow, detailsDiv.children[insertPosition]);
+          } else {
+            // Move to correct position
+            detailsDiv.removeChild(chaturthiRow);
+            detailsDiv.insertBefore(chaturthiRow, detailsDiv.children[insertPosition]);
+          }
+
+          if (!fastDay.isToday) {
+            document.getElementById('nextChaturthi').innerHTML = `
+                            <div class="text-right">
+                                <div class="text-sm font-medium text-gray-900 dark:text-white">${fastDay.date.toLocaleDateString('en-US', dateOptions)}</div>
+                                <div class="text-xs text-gray-500 dark:text-stone-500 mt-0.5">${fastDay.date.toLocaleDateString('en-US', dayOptions)}</div>
+                            </div>
+                        `;
+          } else {
+            document.getElementById('nextChaturthi').innerHTML = '<div class="text-sm font-medium text-gray-900 dark:text-white">Today!</div>';
+          }
+          insertPosition++;
+        } else if (fastDay.type === 'ekadashi') {
+          let ekadashiRow = document.getElementById('ekadashiRow');
+          if (!ekadashiRow) {
+            ekadashiRow = document.createElement('div');
+            ekadashiRow.id = 'ekadashiRow';
+            ekadashiRow.className = 'flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700';
+            ekadashiRow.innerHTML = `
+                            <span class="text-sm text-gray-600 dark:text-stone-400">
+                                <div>Next Ekadashi</div>
+                                <div class="text-xs mt-0.5 text-gray-500 dark:text-stone-500">11<sup>th</sup> Lunar Day</div>
+                            </span>
+                            <span class="text-sm font-medium text-gray-900 dark:text-white" id="nextEkadashi"></span>
+                        `;
+            detailsDiv.insertBefore(ekadashiRow, detailsDiv.children[insertPosition]);
+          } else {
+            // Move to correct position
+            detailsDiv.removeChild(ekadashiRow);
+            detailsDiv.insertBefore(ekadashiRow, detailsDiv.children[insertPosition]);
+          }
+
+          if (!fastDay.isToday) {
+            document.getElementById('nextEkadashi').innerHTML = `
+                            <div class="text-right">
+                                <div class="text-sm font-medium text-gray-900 dark:text-white">${fastDay.date.toLocaleDateString('en-US', dateOptions)} (${fastDay.displayType})</div>
+                                <div class="text-xs text-gray-500 dark:text-stone-500 mt-0.5">${fastDay.date.toLocaleDateString('en-US', dayOptions)}</div>
+                            </div>
+                        `;
+          } else {
+            document.getElementById('nextEkadashi').innerHTML = '<div class="text-sm font-medium text-gray-900 dark:text-white">Today!</div>';
+          }
+          insertPosition++;
+        } else if (fastDay.type === 'chaturdashi') {
+          let chaturdasiRow = document.getElementById('chaturdasiRow');
+          if (!chaturdasiRow) {
+            chaturdasiRow = document.createElement('div');
+            chaturdasiRow.id = 'chaturdasiRow';
+            chaturdasiRow.className = 'flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700';
+            chaturdasiRow.innerHTML = `
+                            <span class="text-sm text-gray-600 dark:text-stone-400">
+                                <div>Next Chaturdashi</div>
+                                <div class="text-xs mt-0.5 text-gray-500 dark:text-stone-500">14<sup>th</sup> Lunar Day (Krishna Paksha)</div>
+                            </span>
+                            <span id="nextChaturdasi"></span>
+                        `;
+            detailsDiv.insertBefore(chaturdasiRow, detailsDiv.children[insertPosition]);
+          } else {
+            // Move to correct position
+            detailsDiv.removeChild(chaturdasiRow);
+            detailsDiv.insertBefore(chaturdasiRow, detailsDiv.children[insertPosition]);
+          }
+
+          if (!fastDay.isToday) {
+            document.getElementById('nextChaturdasi').innerHTML = `
+                            <div class="text-right">
+                                <div class="text-sm font-medium text-gray-900 dark:text-white">${fastDay.date.toLocaleDateString('en-US', dateOptions)}</div>
+                                <div class="text-xs text-gray-500 dark:text-stone-500 mt-0.5">${fastDay.date.toLocaleDateString('en-US', dayOptions)}</div>
+                            </div>
+                        `;
+          } else {
+            document.getElementById('nextChaturdasi').innerHTML = '<div class="text-sm font-medium text-gray-900 dark:text-white">Today!</div>';
+          }
+          insertPosition++;
+        }
+      });
+
+      // Distance varies between 356,500 km (perigee) and 406,700 km (apogee)
+      // The Moon's orbit is elliptical, not circular, so the distance changes by ~50,000 km
+      // This is the distance between Earth's center and Moon's center
+      // 
+      // NOTE: This is a simplified approximation using a sine wave
+      // In reality, perigee/apogee doesn't correlate directly with moon phase
+      // For accurate real-time distance, we'd need complex orbital mechanics calculations
+      // or an astronomy library that accounts for eccentricity and anomaly
+      const avgDistance = 384400;
+      const variation = 25000;
+      const distance = avgDistance + Math.sin(moonData.phase * 2 * Math.PI) * variation;
+      document.getElementById('distance').textContent = `~${Math.round(distance).toLocaleString()} km`;
+
+      // Update time
+      document.getElementById('updateTime').textContent = `Updated ${now.toLocaleTimeString()}`;
+    }
+
+    // Update on load
+    initializeDatePicker();
+    updateMoonDisplay();
+
+    // Update every minute only if on today's date
+    setInterval(() => {
+      const today = new Date();
+      if (selectedDate.toDateString() === today.toDateString()) {
+        selectedDate = today; // Keep synced to current time
+        updateMoonDisplay();
+      }
+    }, 60000);
+
+    // Service Worker registration for PWA (disabled for now)
+    // if ('serviceWorker' in navigator) {
+    //   window.addEventListener('load', () => {
+    //     navigator.serviceWorker.register('sw.js')
+    //       .then(reg => console.log('Service Worker registered'))
+    //       .catch(err => console.log('Service Worker registration failed'));
+    //   });
+    // }
+  </script>
+</body>
+
+</html>
