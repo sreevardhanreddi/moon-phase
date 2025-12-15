@@ -2,15 +2,24 @@
 
 A web-based moon phase calculator that displays the current lunar phase, illumination percentage, and important Hindu lunar calendar dates (Tithi). Built as a Progressive Web App (PWA) for offline use.
 
+## Demo
+
+Live at: [https://sreevardhanreddi.github.io/moon-phase](https://sreevardhanreddi.github.io/moon-phase)
+
 ## Features
 
 - Real-time moon phase visualization with SVG rendering
-- Date picker to view moon phase for any date
+- Date picker to view moon phase for any date (past, present, future)
 - Hindu lunar calendar integration (Tithi, Paksha)
-- Special day tracking: Ekadashi (11th), Chaturthi (19th), Chaturdashi (14th)
+- Special day tracking with visual highlights:
+  - Ekadashi (11th lunar day) - red highlight
+  - Chaturthi (4th lunar day, Krishna Paksha) - orange highlight
+  - Chaturdashi (14th lunar day) - indigo highlight
 - Next New Moon (Amavasya) and Full Moon (Purnima) dates
-- Dark/Light theme support
+- Previous Ekadashi tracking
+- Dark/Light theme support with system preference detection
 - PWA support for offline use
+- Responsive design for mobile and desktop
 
 ## How the Calculations Work
 
@@ -177,10 +186,72 @@ Factors not accounted for in this simplified model:
 
 ## Technology
 
-- HTML5, CSS3 (Tailwind CSS)
-- Vanilla JavaScript
+- HTML5, CSS3 (Tailwind CSS v3.4)
+- Vanilla JavaScript (no frameworks)
 - SVG for moon visualization
 - Service Worker for PWA/offline support
+- PostCSS with Autoprefixer and cssnano for production builds
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v18 or higher recommended)
+- npm
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/sreevardhanreddi/moon-phase.git
+cd moon-phase
+
+# Install dependencies
+npm install
+
+# Build CSS for production
+npm run build
+
+# Or watch for changes during development
+npm run dev
+```
+
+### Development
+
+```bash
+# Start development mode (watches for CSS changes)
+npm run dev
+
+# Open index.html in your browser
+# Or use a local server like:
+npx serve .
+```
+
+### Build
+
+```bash
+# Production build (minifies CSS)
+npm run build
+```
+
+## Project Structure
+
+```
+moon-phase/
+├── index.html          # Main application (HTML + embedded JS)
+├── manifest.json       # PWA manifest
+├── sw.js              # Service Worker for offline support
+├── src/
+│   └── input.css      # Tailwind CSS source
+├── dist/
+│   └── output.css     # Compiled CSS (generated)
+├── package.json       # Dependencies and scripts
+├── tailwind.config.js # Tailwind configuration
+├── postcss.config.js  # PostCSS configuration
+└── .github/
+    └── workflows/
+        └── deploy.yml # GitHub Pages deployment
+```
 
 ## License
 
