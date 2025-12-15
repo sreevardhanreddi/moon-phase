@@ -30,136 +30,138 @@
     </svg>
   </button>
 
-  <div
-    class="max-w-lg w-full bg-white/80 dark:bg-stone-800/80 backdrop-blur-lg rounded-3xl p-8 md:p-10 shadow-2xl shadow-gray-400/50 dark:shadow-[0_20px_40px_-12px_rgba(255,255,255,0.08)] border border-gray-200 dark:border-stone-700">
-    <!-- Date Picker -->
-    <div class="flex items-center justify-between gap-3 mb-6 bg-gray-100/50 dark:bg-stone-900/50 rounded-xl p-3">
-      <button id="prevDay" aria-label="Previous day"
-        class="p-2 hover:bg-gray-200 dark:hover:bg-stone-700 rounded-lg transition-colors flex-shrink-0">
-        <svg class="w-5 h-5 text-gray-700 dark:text-stone-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-        </svg>
-      </button>
+  <main>
+    <div
+      class="max-w-lg w-full bg-white/80 dark:bg-stone-800/80 backdrop-blur-lg rounded-3xl p-8 md:p-10 shadow-2xl shadow-gray-400/50 dark:shadow-[0_20px_40px_-12px_rgba(255,255,255,0.08)] border border-gray-200 dark:border-stone-700">
+      <!-- Date Picker -->
+      <div class="flex items-center justify-between gap-3 mb-6 bg-gray-100/50 dark:bg-stone-900/50 rounded-xl p-3">
+        <button id="prevDay" aria-label="Previous day"
+          class="p-2 hover:bg-gray-200 dark:hover:bg-stone-700 rounded-lg transition-colors flex-shrink-0">
+          <svg class="w-5 h-5 text-gray-700 dark:text-stone-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
 
-      <label for="dateInput" class="sr-only">Select date</label>
-      <input type="date" id="dateInput" aria-label="Select date to view moon phase"
-        class="flex-1 px-3 py-2 bg-white dark:bg-stone-800 border border-gray-300 dark:border-stone-600 rounded-lg text-sm font-medium text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 max-w-xs">
+        <label for="dateInput" class="sr-only">Select date</label>
+        <input type="date" id="dateInput" aria-label="Select date to view moon phase"
+          class="flex-1 px-3 py-2 bg-white dark:bg-stone-800 border border-gray-300 dark:border-stone-600 rounded-lg text-sm font-medium text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 max-w-xs">
 
-      <button id="nextDay" aria-label="Next day"
-        class="p-2 hover:bg-gray-200 dark:hover:bg-stone-700 rounded-lg transition-colors flex-shrink-0">
-        <svg class="w-5 h-5 text-gray-700 dark:text-stone-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-        </svg>
-      </button>
+        <button id="nextDay" aria-label="Next day"
+          class="p-2 hover:bg-gray-200 dark:hover:bg-stone-700 rounded-lg transition-colors flex-shrink-0">
+          <svg class="w-5 h-5 text-gray-700 dark:text-stone-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
 
-      <button id="todayBtn"
-        class="px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-colors flex-shrink-0">
-        Today
-      </button>
-    </div>
+        <button id="todayBtn"
+          class="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors flex-shrink-0">
+          Today
+        </button>
+      </div>
 
-    <div class="text-center mb-8">
-      <div class="w-48 h-48 md:w-52 md:h-52 mx-auto mb-5 relative">
-        <svg id="moonSVG" viewBox="0 0 200 200" class="w-full h-full drop-shadow-2xl">
-          <!-- Moon base circle -->
-          <defs>
-            <!-- Clipping path to keep shadow within moon -->
-            <clipPath id="moonClip">
-              <circle cx="100" cy="100" r="90" />
-            </clipPath>
+      <div class="text-center mb-8">
+        <div class="w-48 h-48 md:w-52 md:h-52 mx-auto mb-5 relative">
+          <svg id="moonSVG" viewBox="0 0 200 200" class="w-full h-full drop-shadow-2xl">
+            <!-- Moon base circle -->
+            <defs>
+              <!-- Clipping path to keep shadow within moon -->
+              <clipPath id="moonClip">
+                <circle cx="100" cy="100" r="90" />
+              </clipPath>
 
-            <!-- Crater pattern -->
-            <pattern id="craters" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
-              <circle cx="60" cy="80" r="6" fill="rgba(0,0,0,0.15)" />
-              <circle cx="140" cy="60" r="10" fill="rgba(0,0,0,0.1)" />
-              <circle cx="40" cy="140" r="8" fill="rgba(0,0,0,0.12)" />
-              <circle cx="160" cy="120" r="12" fill="rgba(0,0,0,0.08)" />
-              <circle cx="100" cy="160" r="7" fill="rgba(0,0,0,0.1)" />
-              <circle cx="120" cy="40" r="4" fill="rgba(0,0,0,0.07)" />
-              <circle cx="30" cy="100" r="5" fill="rgba(0,0,0,0.09)" />
-              <circle cx="170" cy="170" r="6" fill="rgba(0,0,0,0.11)" />
-              <circle cx="90" cy="110" r="3" fill="rgba(0,0,0,0.06)" />
-              <circle cx="70" cy="30" r="4" fill="rgba(0,0,0,0.08)" />
-            </pattern>
+              <!-- Crater pattern -->
+              <pattern id="craters" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
+                <circle cx="60" cy="80" r="6" fill="rgba(0,0,0,0.15)" />
+                <circle cx="140" cy="60" r="10" fill="rgba(0,0,0,0.1)" />
+                <circle cx="40" cy="140" r="8" fill="rgba(0,0,0,0.12)" />
+                <circle cx="160" cy="120" r="12" fill="rgba(0,0,0,0.08)" />
+                <circle cx="100" cy="160" r="7" fill="rgba(0,0,0,0.1)" />
+                <circle cx="120" cy="40" r="4" fill="rgba(0,0,0,0.07)" />
+                <circle cx="30" cy="100" r="5" fill="rgba(0,0,0,0.09)" />
+                <circle cx="170" cy="170" r="6" fill="rgba(0,0,0,0.11)" />
+                <circle cx="90" cy="110" r="3" fill="rgba(0,0,0,0.06)" />
+                <circle cx="70" cy="30" r="4" fill="rgba(0,0,0,0.08)" />
+              </pattern>
 
-            <!-- Radial gradient for 3D effect -->
-            <radialGradient id="moonGradient">
-              <stop offset="0%" stop-color="#f5f5f5" />
-              <stop offset="70%" stop-color="#e0e0e0" />
-              <stop offset="100%" stop-color="#d0d0d0" />
-            </radialGradient>
+              <!-- Radial gradient for 3D effect -->
+              <radialGradient id="moonGradient">
+                <stop offset="0%" stop-color="#f5f5f5" />
+                <stop offset="70%" stop-color="#e0e0e0" />
+                <stop offset="100%" stop-color="#d0d0d0" />
+              </radialGradient>
 
-            <!-- Shadow gradient -->
-            <linearGradient id="shadowGradient">
-              <stop offset="0%" stop-color="#050505" />
-              <stop offset="100%" stop-color="#000000" />
-            </linearGradient>
-          </defs>
+              <!-- Shadow gradient -->
+              <linearGradient id="shadowGradient">
+                <stop offset="0%" stop-color="#050505" />
+                <stop offset="100%" stop-color="#000000" />
+              </linearGradient>
+            </defs>
 
-          <!-- Group with clipping -->
-          <g clip-path="url(#moonClip)">
-            <!-- Moon background -->
-            <circle cx="100" cy="100" r="90" fill="url(#moonGradient)" />
+            <!-- Group with clipping -->
+            <g clip-path="url(#moonClip)">
+              <!-- Moon background -->
+              <circle cx="100" cy="100" r="90" fill="url(#moonGradient)" />
 
-            <!-- Craters -->
-            <circle cx="100" cy="100" r="90" fill="url(#craters)" />
+              <!-- Craters -->
+              <circle cx="100" cy="100" r="90" fill="url(#craters)" />
 
-            <!-- Shadow (will be manipulated by JS) -->
-            <g id="moonPhaseGroup">
-              <!-- This will be dynamically updated -->
+              <!-- Shadow (will be manipulated by JS) -->
+              <g id="moonPhaseGroup">
+                <!-- This will be dynamically updated -->
+              </g>
             </g>
-          </g>
-        </svg>
+          </svg>
+        </div>
+        <div class="text-3xl font-semibold mb-2 text-gray-900 dark:text-white" id="phaseName">Purnima</div>
+        <div class="text-lg text-gray-700 dark:text-stone-300 mb-5" id="illumination">
+          <span id="illumPercent">100% Illuminated</span>
+          <span class="text-sm text-gray-600 dark:text-stone-400 ml-2" id="westernPhase">(Full Moon)</span>
+        </div>
       </div>
-      <div class="text-3xl font-semibold mb-2 text-gray-900 dark:text-white" id="phaseName">Purnima</div>
-      <div class="text-lg text-gray-600 dark:text-stone-400 mb-5" id="illumination">
-        <span id="illumPercent">100% Illuminated</span>
-        <span class="text-sm text-gray-400 dark:text-stone-500 ml-2" id="westernPhase">(Full Moon)</span>
-      </div>
-    </div>
 
-    <div id="detailsSection" class="bg-gray-100/50 dark:bg-stone-900/50 rounded-2xl p-5 mt-5 space-y-3">
-      <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700"
-        id="lunarDayRow">
-        <span class="text-sm text-gray-600 dark:text-stone-400">Lunar Day</span>
-        <span id="lunarDay"></span>
+      <div id="detailsSection" class="bg-gray-100/50 dark:bg-stone-900/50 rounded-2xl p-5 mt-5 space-y-3">
+        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700"
+          id="lunarDayRow">
+          <span class="text-sm text-gray-700 dark:text-stone-300">Lunar Day</span>
+          <span id="lunarDay"></span>
+        </div>
+        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700">
+          <span class="text-sm text-gray-700 dark:text-stone-300">
+            <div>Next New Moon</div>
+            <div class="text-xs mt-0.5 text-gray-600 dark:text-stone-400">Amavasya</div>
+          </span>
+          <span id="nextNew"></span>
+        </div>
+        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700">
+          <span class="text-sm text-gray-700 dark:text-stone-300">
+            <div>Next Full Moon</div>
+            <div class="text-xs mt-0.5 text-gray-600 dark:text-stone-400">Purnima (Pournami)</div>
+          </span>
+          <span id="nextFull"></span>
+        </div>
+        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700">
+          <span class="text-sm text-gray-700 dark:text-stone-300">
+            <div>Previous Ekadashi</div>
+            <div class="text-xs mt-0.5 text-gray-600 dark:text-stone-400">11<sup>th</sup> Lunar Day</div>
+          </span>
+          <span id="prevEkadashi"></span>
+        </div>
+        <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700">
+          <span class="text-sm text-gray-700 dark:text-stone-300">Age</span>
+          <span class="text-sm font-medium text-gray-900 dark:text-white" id="moonAge">14.77 days</span>
+        </div>
+        <div class="flex justify-between items-center py-3">
+          <span class="text-sm text-gray-700 dark:text-stone-300">Distance</span>
+          <span class="text-sm font-medium text-gray-900 dark:text-white" id="distance">~384,400 km</span>
+        </div>
       </div>
-      <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700">
-        <span class="text-sm text-gray-600 dark:text-stone-400">
-          <div>Next New Moon</div>
-          <div class="text-xs mt-0.5 text-gray-500 dark:text-stone-500">Amavasya</div>
-        </span>
-        <span id="nextNew"></span>
-      </div>
-      <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700">
-        <span class="text-sm text-gray-600 dark:text-stone-400">
-          <div>Next Full Moon</div>
-          <div class="text-xs mt-0.5 text-gray-500 dark:text-stone-500">Purnima (Pournami)</div>
-        </span>
-        <span id="nextFull"></span>
-      </div>
-      <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700">
-        <span class="text-sm text-gray-600 dark:text-stone-400">
-          <div>Previous Ekadashi</div>
-          <div class="text-xs mt-0.5 text-gray-500 dark:text-stone-500">11<sup>th</sup> Lunar Day</div>
-        </span>
-        <span id="prevEkadashi"></span>
-      </div>
-      <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700">
-        <span class="text-sm text-gray-600 dark:text-stone-400">Age</span>
-        <span class="text-sm font-medium text-gray-900 dark:text-white" id="moonAge">14.77 days</span>
-      </div>
-      <div class="flex justify-between items-center py-3">
-        <span class="text-sm text-gray-600 dark:text-stone-400">Distance</span>
-        <span class="text-sm font-medium text-gray-900 dark:text-white" id="distance">~384,400 km</span>
-      </div>
-    </div>
 
-    <div class="text-center mt-3 text-xs text-gray-400 dark:text-stone-600" id="updateTime">Updated just now</div>
-  </div>
+      <div class="text-center mt-3 text-xs text-gray-500 dark:text-stone-400" id="updateTime">Updated just now</div>
+    </div>
+  </main>
 
   <!-- Footer -->
-  <footer class="py-6 text-center text-sm text-gray-600 dark:text-stone-400">
+  <footer class="py-6 text-center text-sm text-gray-700 dark:text-stone-300">
     <div class="flex justify-center items-center gap-4">
       <a href="https://sreevardhanreddi.github.io" target="_blank" rel="noopener noreferrer"
         aria-label="Visit portfolio website"
@@ -171,7 +173,7 @@
             d="M12 3a15.3 15.3 0 0 1 4 9 15.3 15.3 0 0 1-4 9 15.3 15.3 0 0 1-4-9 15.3 15.3 0 0 1 4-9z" />
         </svg>
       </a>
-      <span class="text-gray-400 dark:text-stone-600">•</span>
+      <span class="text-gray-500 dark:text-stone-400">•</span>
       <a href="https://github.com/sreevardhanreddi/moon-phase" target="_blank" rel="noopener noreferrer"
         aria-label="View source code on GitHub"
         class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors inline-flex items-center gap-1">
@@ -182,7 +184,7 @@
         </svg>
       </a>
     </div>
-    <div class="my-3 font-mono text-gray-500 dark:text-stone-500" id="live-clock"></div>
+    <div class="my-3 font-mono text-gray-600 dark:text-stone-400" id="live-clock"></div>
   </footer>
 
   <script>
@@ -446,22 +448,36 @@
 
       // Update lunar day display with highlight
       const lunarDayRow = document.getElementById('lunarDayRow');
+      const hasColoredBg = isDay11 || isDay19 || isDay14;
+      const labelTextColor = hasColoredBg
+        ? 'text-sm text-gray-700 dark:text-stone-100'
+        : 'text-sm text-gray-700 dark:text-stone-300';
+
       if (isDay11) {
-        lunarDayRow.className = 'flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700 bg-red-50 dark:bg-red-900/20 border-l-4 !border-l-red-500 pl-4 -ml-5';
+        lunarDayRow.className = 'flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700 bg-red-50 dark:bg-red-950/50 border-l-4 !border-l-red-600 dark:!border-l-red-500 pl-4 -ml-5';
       } else if (isDay19) {
-        lunarDayRow.className = 'flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700 bg-orange-50 dark:bg-orange-900/20 border-l-4 !border-l-orange-500 pl-4 -ml-5';
+        lunarDayRow.className = 'flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700 bg-orange-50 dark:bg-orange-950/50 border-l-4 !border-l-orange-600 dark:!border-l-orange-500 pl-4 -ml-5';
       } else if (isDay14) {
-        lunarDayRow.className = 'flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700 bg-indigo-50 dark:bg-indigo-900/20 border-l-4 !border-l-indigo-500 pl-4 -ml-5';
+        lunarDayRow.className = 'flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700 bg-indigo-50 dark:bg-indigo-950/50 border-l-4 !border-l-indigo-600 dark:!border-l-indigo-500 pl-4 -ml-5';
       } else {
         lunarDayRow.className = 'flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700';
       }
 
+      // Update label with appropriate contrast
+      const labelSpan = lunarDayRow.querySelector('span:not(#lunarDay)');
+      if (labelSpan) {
+        labelSpan.className = labelTextColor;
+      }
+
       // Get Tithi information
       const tithiInfo = getTithiName(lunarDay);
+      const smallTextColor = hasColoredBg
+        ? 'text-xs text-gray-600 dark:text-stone-200 mt-0.5'
+        : 'text-xs text-gray-600 dark:text-stone-400 mt-0.5';
       document.getElementById('lunarDay').innerHTML = `
         <div class="text-right">
           <div class="text-sm font-medium text-gray-900 dark:text-white">Day ${lunarDay} - ${tithiInfo.name}</div>
-          <div class="text-xs text-gray-500 dark:text-stone-500 mt-0.5">${tithiInfo.paksha}</div>
+          <div class="${smallTextColor}">${tithiInfo.paksha}</div>
         </div>
       `;
 
@@ -504,7 +520,7 @@
         document.getElementById('prevEkadashi').innerHTML = `
           <div class="text-right">
             <div class="text-sm font-medium text-gray-900 dark:text-white">${prevEkadashi.toLocaleDateString('en-US', dateOptions)} (${prevEkadashiType})</div>
-            <div class="text-xs text-gray-500 dark:text-stone-500 mt-0.5">${prevEkadashi.toLocaleDateString('en-US', dayOptions)}</div>
+            <div class="text-xs text-gray-600 dark:text-stone-400 mt-0.5">${prevEkadashi.toLocaleDateString('en-US', dayOptions)}</div>
           </div>
         `;
       } else {
@@ -514,14 +530,14 @@
       document.getElementById('nextNew').innerHTML = `
         <div class="text-right">
           <div class="text-sm font-medium text-gray-900 dark:text-white">${nextNew.toLocaleDateString('en-US', dateOptions)}</div>
-          <div class="text-xs text-gray-500 dark:text-stone-500 mt-0.5">${nextNew.toLocaleDateString('en-US', dayOptions)}</div>
+          <div class="text-xs text-gray-600 dark:text-stone-400 mt-0.5">${nextNew.toLocaleDateString('en-US', dayOptions)}</div>
         </div>
       `;
 
       document.getElementById('nextFull').innerHTML = `
         <div class="text-right">
           <div class="text-sm font-medium text-gray-900 dark:text-white">${nextFull.toLocaleDateString('en-US', dateOptions)}</div>
-          <div class="text-xs text-gray-500 dark:text-stone-500 mt-0.5">${nextFull.toLocaleDateString('en-US', dayOptions)}</div>
+          <div class="text-xs text-gray-600 dark:text-stone-400 mt-0.5">${nextFull.toLocaleDateString('en-US', dayOptions)}</div>
         </div>
       `;
 
@@ -578,7 +594,7 @@
             chaturthiRow.innerHTML = `
               <span class="text-sm text-gray-600 dark:text-stone-400">
                 <div>Next Chaturthi</div>
-                <div class="text-xs mt-0.5 text-gray-500 dark:text-stone-500">04<sup>th</sup> Lunar Day (Krishna Paksha)</div>
+                <div class="text-xs mt-0.5 text-gray-600 dark:text-stone-400">04<sup>th</sup> Lunar Day (Krishna Paksha)</div>
               </span>
               <span id="nextChaturthi"></span>
             `;
@@ -592,7 +608,7 @@
             document.getElementById('nextChaturthi').innerHTML = `
               <div class="text-right">
                 <div class="text-sm font-medium text-gray-900 dark:text-white">${fastDay.date.toLocaleDateString('en-US', dateOptions)}</div>
-                <div class="text-xs text-gray-500 dark:text-stone-500 mt-0.5">${fastDay.date.toLocaleDateString('en-US', dayOptions)}</div>
+                <div class="text-xs text-gray-600 dark:text-stone-400 mt-0.5">${fastDay.date.toLocaleDateString('en-US', dayOptions)}</div>
               </div>
             `;
           } else {
@@ -608,7 +624,7 @@
             ekadashiRow.innerHTML = `
               <span class="text-sm text-gray-600 dark:text-stone-400">
                 <div>Next Ekadashi</div>
-                <div class="text-xs mt-0.5 text-gray-500 dark:text-stone-500">11<sup>th</sup> Lunar Day</div>
+                <div class="text-xs mt-0.5 text-gray-600 dark:text-stone-400">11<sup>th</sup> Lunar Day</div>
               </span>
               <span class="text-sm font-medium text-gray-900 dark:text-white" id="nextEkadashi"></span>
             `;
@@ -622,7 +638,7 @@
             document.getElementById('nextEkadashi').innerHTML = `
               <div class="text-right">
                 <div class="text-sm font-medium text-gray-900 dark:text-white">${fastDay.date.toLocaleDateString('en-US', dateOptions)} (${fastDay.displayType})</div>
-                <div class="text-xs text-gray-500 dark:text-stone-500 mt-0.5">${fastDay.date.toLocaleDateString('en-US', dayOptions)}</div>
+                <div class="text-xs text-gray-600 dark:text-stone-400 mt-0.5">${fastDay.date.toLocaleDateString('en-US', dayOptions)}</div>
               </div>
             `;
           } else {
@@ -638,7 +654,7 @@
             chaturdasiRow.innerHTML = `
               <span class="text-sm text-gray-600 dark:text-stone-400">
                 <div>Next Chaturdashi</div>
-                <div class="text-xs mt-0.5 text-gray-500 dark:text-stone-500">14<sup>th</sup> Lunar Day (Krishna Paksha)</div>
+                <div class="text-xs mt-0.5 text-gray-600 dark:text-stone-400">14<sup>th</sup> Lunar Day (Krishna Paksha)</div>
               </span>
               <span id="nextChaturdasi"></span>
             `;
@@ -652,7 +668,7 @@
             document.getElementById('nextChaturdasi').innerHTML = `
               <div class="text-right">
                 <div class="text-sm font-medium text-gray-900 dark:text-white">${fastDay.date.toLocaleDateString('en-US', dateOptions)}</div>
-                <div class="text-xs text-gray-500 dark:text-stone-500 mt-0.5">${fastDay.date.toLocaleDateString('en-US', dayOptions)}</div>
+                <div class="text-xs text-gray-600 dark:text-stone-400 mt-0.5">${fastDay.date.toLocaleDateString('en-US', dayOptions)}</div>
               </div>
             `;
           } else {
