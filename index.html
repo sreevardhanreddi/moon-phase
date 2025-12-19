@@ -14,6 +14,12 @@
 
 <body
   class="min-h-screen flex flex-col items-center justify-center p-5 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-stone-950 dark:to-stone-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+  <!-- Language Toggle Button -->
+  <button id="langToggle" aria-label="Toggle language"
+    class="fixed top-6 left-6 px-3 py-2 rounded-full bg-white/80 dark:bg-stone-800/80 backdrop-blur-md shadow-lg border border-gray-200 dark:border-stone-700 hover:scale-105 transition-transform duration-200 z-50 text-sm font-medium text-gray-700 dark:text-stone-300">
+    <span id="langLabel">EN</span>
+  </button>
+
   <!-- Theme Toggle Button -->
   <button id="themeToggle" aria-label="Toggle dark mode"
     class="fixed top-6 right-6 p-3 rounded-full bg-white/80 dark:bg-stone-800/80 backdrop-blur-md shadow-lg border border-gray-200 dark:border-stone-700 hover:scale-110 transition-transform duration-200 z-50">
@@ -127,22 +133,22 @@
         </div>
         <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700">
           <span class="text-sm text-gray-700 dark:text-stone-300">
-            <div>Next New Moon</div>
-            <div class="text-xs mt-0.5 text-gray-600 dark:text-stone-400">Amavasya</div>
+            <div id="nextNewLabel">Next New Moon</div>
+            <div class="text-xs mt-0.5 text-gray-600 dark:text-stone-400" id="nextNewSub">Amavasya</div>
           </span>
           <span id="nextNew"></span>
         </div>
         <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700">
           <span class="text-sm text-gray-700 dark:text-stone-300">
-            <div>Next Full Moon</div>
-            <div class="text-xs mt-0.5 text-gray-600 dark:text-stone-400">Purnima (Pournami)</div>
+            <div id="nextFullLabel">Next Full Moon</div>
+            <div class="text-xs mt-0.5 text-gray-600 dark:text-stone-400" id="nextFullSub">Purnima (Pournami)</div>
           </span>
           <span id="nextFull"></span>
         </div>
         <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700">
           <span class="text-sm text-gray-700 dark:text-stone-300">
-            <div>Previous Ekadashi</div>
-            <div class="text-xs mt-0.5 text-gray-600 dark:text-stone-400">11<sup>th</sup> Lunar Day</div>
+            <div id="prevEkadashiLabel">Previous Ekadashi</div>
+            <div class="text-xs mt-0.5 text-gray-600 dark:text-stone-400" id="prevEkadashiSub">11<sup>th</sup> Lunar Day</div>
           </span>
           <span id="prevEkadashi"></span>
         </div>
@@ -228,6 +234,25 @@
     // Selected date state
     let selectedDate = new Date();
 
+    // Language state (false = Sanskrit/Telugu, true = English)
+    let useEnglish = localStorage.getItem('useEnglish') === 'true';
+
+    function updateLangButton() {
+      document.getElementById('langLabel').textContent = useEnglish ? 'संस्कृत' : 'EN';
+    }
+
+    // Initialize language toggle
+    document.addEventListener('DOMContentLoaded', () => {
+      updateLangButton();
+
+      document.getElementById('langToggle').addEventListener('click', () => {
+        useEnglish = !useEnglish;
+        localStorage.setItem('useEnglish', useEnglish);
+        updateLangButton();
+        updateMoonDisplay();
+      });
+    });
+
     // Format date for input (YYYY-MM-DD)
     function formatDateForInput(date) {
       const year = date.getFullYear();
@@ -307,31 +332,31 @@
     }
 
     function getTithiName(lunarDay) {
-      const tithiNames = {
+      const tithiNamesSanskrit = {
         1: "Prathama (Padyami)",
         2: "Dwitiya (Vidiya)",
         3: "Tritiya (Tadiya)",
         4: "Chaturthi (Chavithi)",
-        5: "Panchami (Panchami)",
-        6: "Shashthi (Shashthi)",
-        7: "Saptami (Sapthami)",
-        8: "Ashtami (Ashtami)",
-        9: "Navami (Navami)",
+        5: "Panchami",
+        6: "Shashthi",
+        7: "Saptami",
+        8: "Ashtami",
+        9: "Navami",
         10: "Dashami (Dasami)",
         11: "Ekadashi (Ekadasi)",
         12: "Dwadashi (Dvadasi)",
         13: "Trayodashi (Tryodasi)",
         14: "Chaturdashi (Chaturdasi)",
-        15: "Purnima",
+        15: "Purnima (Pournami)",
         16: "Prathama (Padyami)",
         17: "Dwitiya (Vidiya)",
         18: "Tritiya (Tadiya)",
         19: "Chaturthi (Chavithi)",
-        20: "Panchami (Panchami)",
-        21: "Shashthi (Shashthi)",
-        22: "Saptami (Sapthami)",
-        23: "Ashtami (Ashtami)",
-        24: "Navami (Navami)",
+        20: "Panchami",
+        21: "Shashthi",
+        22: "Saptami",
+        23: "Ashtami",
+        24: "Navami",
         25: "Dashami (Dasami)",
         26: "Ekadashi (Ekadasi)",
         27: "Dwadashi (Dvadasi)",
@@ -340,13 +365,50 @@
         30: "Amavasya"
       };
 
-      const paksha = lunarDay <= 15 ? "Shukla Paksha" : "Krishna Paksha";
+      const tithiNamesEnglish = {
+        1: "First (Waxing)",
+        2: "Second (Waxing)",
+        3: "Third (Waxing)",
+        4: "Fourth (Waxing)",
+        5: "Fifth (Waxing)",
+        6: "Sixth (Waxing)",
+        7: "Seventh (Waxing)",
+        8: "Eighth (Waxing)",
+        9: "Ninth (Waxing)",
+        10: "Tenth (Waxing)",
+        11: "Eleventh (Waxing)",
+        12: "Twelfth (Waxing)",
+        13: "Thirteenth (Waxing)",
+        14: "Fourteenth (Waxing)",
+        15: "Full Moon",
+        16: "First (Waning)",
+        17: "Second (Waning)",
+        18: "Third (Waning)",
+        19: "Fourth (Waning)",
+        20: "Fifth (Waning)",
+        21: "Sixth (Waning)",
+        22: "Seventh (Waning)",
+        23: "Eighth (Waning)",
+        24: "Ninth (Waning)",
+        25: "Tenth (Waning)",
+        26: "Eleventh (Waning)",
+        27: "Twelfth (Waning)",
+        28: "Thirteenth (Waning)",
+        29: "Fourteenth (Waning)",
+        30: "New Moon"
+      };
+
+      const tithiNames = useEnglish ? tithiNamesEnglish : tithiNamesSanskrit;
+      const paksha = lunarDay <= 15
+        ? (useEnglish ? "Waxing Phase (Bright Half)" : "Shukla Paksha")
+        : (useEnglish ? "Waning Phase (Dark Half)" : "Krishna Paksha");
 
       if (lunarDay === 15) {
         const moonData = getMoonPhase(new Date());
         const isPurnima = moonData.phase > 0.4 && moonData.phase < 0.6;
+        const fullMoonName = useEnglish ? "Full Moon" : "Purnima (Pournami)";
         return {
-          name: isPurnima ? "Purnima (Pournami)" : tithiNames[lunarDay],
+          name: isPurnima ? fullMoonName : tithiNames[lunarDay],
           paksha: paksha
         };
       }
@@ -527,6 +589,14 @@
         document.getElementById('prevEkadashi').innerHTML = '<div class="text-sm font-medium text-gray-900 dark:text-white">Today!</div>';
       }
 
+      // Update labels based on language
+      document.getElementById('nextNewLabel').textContent = useEnglish ? 'Next New Moon' : 'Next New Moon';
+      document.getElementById('nextNewSub').textContent = useEnglish ? '30th Lunar Day' : 'Amavasya';
+      document.getElementById('nextFullLabel').textContent = useEnglish ? 'Next Full Moon' : 'Next Full Moon';
+      document.getElementById('nextFullSub').textContent = useEnglish ? '15th Lunar Day' : 'Purnima (Pournami)';
+      document.getElementById('prevEkadashiLabel').textContent = useEnglish ? 'Previous Eleventh' : 'Previous Ekadashi';
+      document.getElementById('prevEkadashiSub').innerHTML = useEnglish ? '11<sup>th</sup> Lunar Day' : '11<sup>th</sup> Lunar Day';
+
       document.getElementById('nextNew').innerHTML = `
         <div class="text-right">
           <div class="text-sm font-medium text-gray-900 dark:text-white">${nextNew.toLocaleDateString('en-US', dateOptions)}</div>
@@ -587,22 +657,22 @@
       fastDays.forEach((fastDay) => {
         if (fastDay.type === 'chaturthi') {
           let chaturthiRow = document.getElementById('chaturthiRow');
+          const chaturthiLabel = useEnglish ? 'Next Fourth (Waning)' : 'Next Chaturthi';
+          const chaturthiSub = useEnglish ? '4<sup>th</sup> Lunar Day (Waning Phase)' : '04<sup>th</sup> Lunar Day (Krishna Paksha)';
           if (!chaturthiRow) {
             chaturthiRow = document.createElement('div');
             chaturthiRow.id = 'chaturthiRow';
             chaturthiRow.className = 'flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700';
-            chaturthiRow.innerHTML = `
-              <span class="text-sm text-gray-600 dark:text-stone-400">
-                <div>Next Chaturthi</div>
-                <div class="text-xs mt-0.5 text-gray-600 dark:text-stone-400">04<sup>th</sup> Lunar Day (Krishna Paksha)</div>
-              </span>
-              <span id="nextChaturthi"></span>
-            `;
-            detailsDiv.insertBefore(chaturthiRow, detailsDiv.children[insertPosition]);
-          } else {
-            detailsDiv.removeChild(chaturthiRow);
-            detailsDiv.insertBefore(chaturthiRow, detailsDiv.children[insertPosition]);
           }
+          chaturthiRow.innerHTML = `
+            <span class="text-sm text-gray-600 dark:text-stone-400">
+              <div>${chaturthiLabel}</div>
+              <div class="text-xs mt-0.5 text-gray-600 dark:text-stone-400">${chaturthiSub}</div>
+            </span>
+            <span id="nextChaturthi"></span>
+          `;
+          if (chaturthiRow.parentNode) detailsDiv.removeChild(chaturthiRow);
+          detailsDiv.insertBefore(chaturthiRow, detailsDiv.children[insertPosition]);
 
           if (!fastDay.isToday) {
             document.getElementById('nextChaturthi').innerHTML = `
@@ -617,22 +687,22 @@
           insertPosition++;
         } else if (fastDay.type === 'ekadashi') {
           let ekadashiRow = document.getElementById('ekadashiRow');
+          const ekadashiLabel = useEnglish ? 'Next Eleventh' : 'Next Ekadashi';
+          const ekadashiSub = useEnglish ? '11<sup>th</sup> Lunar Day' : '11<sup>th</sup> Lunar Day';
           if (!ekadashiRow) {
             ekadashiRow = document.createElement('div');
             ekadashiRow.id = 'ekadashiRow';
             ekadashiRow.className = 'flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700';
-            ekadashiRow.innerHTML = `
-              <span class="text-sm text-gray-600 dark:text-stone-400">
-                <div>Next Ekadashi</div>
-                <div class="text-xs mt-0.5 text-gray-600 dark:text-stone-400">11<sup>th</sup> Lunar Day</div>
-              </span>
-              <span class="text-sm font-medium text-gray-900 dark:text-white" id="nextEkadashi"></span>
-            `;
-            detailsDiv.insertBefore(ekadashiRow, detailsDiv.children[insertPosition]);
-          } else {
-            detailsDiv.removeChild(ekadashiRow);
-            detailsDiv.insertBefore(ekadashiRow, detailsDiv.children[insertPosition]);
           }
+          ekadashiRow.innerHTML = `
+            <span class="text-sm text-gray-600 dark:text-stone-400">
+              <div>${ekadashiLabel}</div>
+              <div class="text-xs mt-0.5 text-gray-600 dark:text-stone-400">${ekadashiSub}</div>
+            </span>
+            <span class="text-sm font-medium text-gray-900 dark:text-white" id="nextEkadashi"></span>
+          `;
+          if (ekadashiRow.parentNode) detailsDiv.removeChild(ekadashiRow);
+          detailsDiv.insertBefore(ekadashiRow, detailsDiv.children[insertPosition]);
 
           if (!fastDay.isToday) {
             document.getElementById('nextEkadashi').innerHTML = `
@@ -647,22 +717,22 @@
           insertPosition++;
         } else if (fastDay.type === 'chaturdashi') {
           let chaturdasiRow = document.getElementById('chaturdasiRow');
+          const chaturdasiLabel = useEnglish ? 'Next Fourteenth (Waning)' : 'Next Chaturdashi';
+          const chaturdasiSub = useEnglish ? '14<sup>th</sup> Lunar Day (Waning Phase)' : '14<sup>th</sup> Lunar Day (Krishna Paksha)';
           if (!chaturdasiRow) {
             chaturdasiRow = document.createElement('div');
             chaturdasiRow.id = 'chaturdasiRow';
             chaturdasiRow.className = 'flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700';
-            chaturdasiRow.innerHTML = `
-              <span class="text-sm text-gray-600 dark:text-stone-400">
-                <div>Next Chaturdashi</div>
-                <div class="text-xs mt-0.5 text-gray-600 dark:text-stone-400">14<sup>th</sup> Lunar Day (Krishna Paksha)</div>
-              </span>
-              <span id="nextChaturdasi"></span>
-            `;
-            detailsDiv.insertBefore(chaturdasiRow, detailsDiv.children[insertPosition]);
-          } else {
-            detailsDiv.removeChild(chaturdasiRow);
-            detailsDiv.insertBefore(chaturdasiRow, detailsDiv.children[insertPosition]);
           }
+          chaturdasiRow.innerHTML = `
+            <span class="text-sm text-gray-600 dark:text-stone-400">
+              <div>${chaturdasiLabel}</div>
+              <div class="text-xs mt-0.5 text-gray-600 dark:text-stone-400">${chaturdasiSub}</div>
+            </span>
+            <span id="nextChaturdasi"></span>
+          `;
+          if (chaturdasiRow.parentNode) detailsDiv.removeChild(chaturdasiRow);
+          detailsDiv.insertBefore(chaturdasiRow, detailsDiv.children[insertPosition]);
 
           if (!fastDay.isToday) {
             document.getElementById('nextChaturdasi').innerHTML = `
