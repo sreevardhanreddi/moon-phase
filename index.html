@@ -148,7 +148,8 @@
         <div class="flex justify-between items-center py-3 border-b border-gray-200 dark:border-stone-700">
           <span class="text-sm text-gray-700 dark:text-stone-300">
             <div id="prevEkadashiLabel">Previous Ekadashi</div>
-            <div class="text-xs mt-0.5 text-gray-600 dark:text-stone-400" id="prevEkadashiSub">11<sup>th</sup> Lunar Day</div>
+            <div class="text-xs mt-0.5 text-gray-600 dark:text-stone-400" id="prevEkadashiSub">11<sup>th</sup> Lunar Day
+            </div>
           </span>
           <span id="prevEkadashi"></span>
         </div>
@@ -300,8 +301,9 @@
       let jd = 367 * year - Math.floor(7 * (year + Math.floor((month + 9) / 12)) / 4) +
         Math.floor(275 * month / 9) + day + 1721013.5;
 
-      // Days since known new moon (Jan 6, 2000)
-      const daysSinceNew = jd - 2451549.5;
+      // Days since known new moon (Jan 6, 2000 at 18:14 UTC, JD 2451550.26)
+      // Adjusted for IST sunrise-based Hindu calendar (tithi changes at ~6:30 AM IST, not midnight)
+      const daysSinceNew = jd - 2451549.76;
 
       // Synodic month (lunar cycle) is 29.53 days
       const synodicMonth = 29.53058867;
