@@ -501,8 +501,11 @@
       const now = selectedDate;
       const moonData = getMoonPhase(now);
 
-      // Calculate lunar day (1-30)
-      const lunarDay = Math.floor(moonData.age) + 1;
+      // Calculate lunar day (1-30) based on tithi system
+      // Each tithi is synodic month / 30 = ~0.984 days, not 1 solar day
+      const synodicMonth = 29.53058867;
+      const tithiDuration = synodicMonth / 30;
+      const lunarDay = Math.min(30, Math.floor(moonData.age / tithiDuration) + 1);
       const isDay11 = lunarDay === 11 || lunarDay === 26;
       const isDay19 = lunarDay === 19;
       const isDay14 = lunarDay === 14 || lunarDay === 29;
